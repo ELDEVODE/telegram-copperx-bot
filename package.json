@@ -1,0 +1,33 @@
+{
+  "name": "telegram-copperx-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for CopperX platform",
+  "main": "dist/index.js",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "bun run src/index.ts",
+    "dev": "ts-node src/index.ts",
+    "watch": "nodemon --exec ts-node src/index.ts"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "dotenv": "^16.3.1",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0",
+    "qrcode": "^1.5.3",
+    "telegraf": "^4.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/qrcode": "^1.5.5",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "@types/bun": "latest",
+    "typescript": "^5.3.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
