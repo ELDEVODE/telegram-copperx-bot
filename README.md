@@ -1,112 +1,113 @@
-# CopperX Telegram Bot
+# CopperX Telegram Bot 🤖
+
+<p align="center">
+  <img src="https://copperx.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffooter-logo.4356bc27.svg&w=96&q=75" alt="CopperX Logo" />
+</p>
 
 A secure and feature-rich Telegram bot for the CopperX platform that enables users to manage crypto assets, perform transfers, and track transactions in real-time.
 
-## Features
+## ✨ Features
 
-### Authentication & Security
+### 🔐 Authentication & Security
 - **Email-based OTP Authentication**
   - Secure login with email verification
-  - Rate-limited OTP requests to prevent abuse
+  - Session token management
   - Auto-logout for inactive sessions
 - **Session Management**
   - Persistent session storage
-  - Token-based authentication with auto-refresh
-  - Secure session cleanup for inactive users
+  - Token-based authentication
+  - Automatic session cleanup
 - **KYC Integration**
   - KYC status verification
   - Direct links to complete KYC process
-  - Real-time KYC status updates
+  - Real-time status display
 
-### Wallet Management
+### 💼 Wallet Management
 - **Multi-Currency Support**
   - USD, BTC, ETH, USDT balances
   - Real-time balance updates via Pusher
-  - Custom currency display preferences
+  - Currency display preferences
 - **Wallet Features**
-  - Multiple wallet support
+  - Multiple wallet management
   - Default wallet selection
-  - QR code generation for addresses
-  - One-click address copying
+  - QR code address display
+  - Address copy functionality
 - **Deposit & Withdrawal**
-  - Network-specific deposit addresses
-  - Support for multiple blockchain networks
-  - Fee calculation and previews
+  - Network-specific addresses
+  - Multi-network support
+  - Fee preview and calculation
 
-### Transfer Capabilities
+### 💸 Transfer Capabilities
 - **P2P Transfers**
   - Send to email addresses
   - Internal wallet transfers
   - Transfer confirmation flow
-  - Fee calculation and preview
 - **External Transfers**
   - Withdraw to external wallets
-  - Multi-network support (Ethereum, Bitcoin, etc.)
-  - Address validation by network
+  - Support for ETH, BTC, USDT networks
+  - Address validation
 - **Bulk Operations**
-  - CSV-based bulk transfers (up to 50 transfers)
-  - Email and wallet transfer templates
-  - Batch processing with detailed results
-  - Transfer validation and error reporting
+  - CSV-based transfers
+  - Email and wallet templates
+  - Batch processing (up to 50 transfers)
+  - Error reporting
 
-### Transaction Management
+### 📊 Transaction Management
 - **History & Tracking**
-  - Paginated transaction history
-  - Real-time status updates
-  - Detailed transfer information
-  - Transaction search and filtering
+  - Paginated history display
+  - Transfer status updates
+  - Detailed transaction info
+  - Status filtering
 - **Transfer States**
   - Pending/Processing/Completed states
-  - Error handling and notifications
-  - Cancellation support where applicable
+  - Error handling
+  - Support for cancellation
 
-### User Preferences
-- **Customization Options**
-  - Default currency selection
-  - Display format (detailed/compact)
-  - Language preferences
-  - Timezone settings
-- **Notification Settings**
-  - Deposit notifications
-  - Transfer status updates
-  - Custom alert preferences
+### ⚙️ User Preferences
+- **Display Options**
+  - Default currency setting
+  - Detailed/Compact view modes
+  - Language selection
+- **Notifications**
+  - Toggle notifications
+  - Transfer status alerts
+  - Balance updates
 
-### Technical Features
+### 🛠️ Technical Features
 - **Rate Limiting**
   - Configurable request limits
-  - Per-action rate limiting
-  - Automatic cooldown periods
+  - Per-action limiting
+  - Cooldown periods
 - **Error Handling**
-  - Graceful error recovery
-  - User-friendly error messages
-  - Detailed error logging
+  - User-friendly messages
+  - Error logging
+  - Error recovery
 - **Real-time Updates**
-  - Pusher integration for live updates
-  - Balance change notifications
-  - Transaction status updates
+  - Pusher integration
+  - Balance notifications
+  - Transfer updates
 
-## Setup
+## 🚀 Setup
 
-### Prerequisites
+### 📋 Prerequisites
 - Node.js 16+ or Bun runtime
 - CopperX API credentials
 - Telegram Bot Token
-- Pusher account (for real-time features)
+- Pusher account (optional)
 
-### Environment Configuration
+### 🔧 Environment Configuration
 Create a `.env` file with these settings:
 ```env
 # Bot Configuration
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 COPPERX_API_URL=https://income-api.copperx.io/api
-PLATFORM_URL=https://payout.copperx.io/app
 
-# Real-time Updates
+# Real-time Updates (Optional)
 PUSHER_KEY=your_pusher_key
-PUSHER_CLUSTER=ap1
+PUSHER_CLUSTER=mt1
 
 # Logging Configuration
-LOG_LEVEL=DEBUG  # Options: DEBUG, INFO, WARN, ERROR
+LOG_LEVEL=INFO  # DEBUG, INFO, WARN, ERROR
 LOG_DIR=logs
 LOG_MAX_FILES=7
 LOG_MAX_SIZE=10485760  # 10MB
@@ -116,7 +117,7 @@ RATE_LIMIT_MAX_REQUESTS=30
 RATE_LIMIT_WINDOW_MS=60000
 ```
 
-### Installation
+### 📦 Installation
 
 ```bash
 # Using Bun (recommended)
@@ -126,7 +127,7 @@ bun install
 npm install
 ```
 
-### Running the Bot
+### 🏃‍♂️ Running the Bot
 
 ```bash
 # Development with Bun
@@ -144,84 +145,81 @@ bun run start
 npm run start
 ```
 
-## Command Reference
+## 📝 Command Reference
 
-### Authentication Commands
-- `/start` - Initialize bot and see welcome message
-- `/login` - Start email authentication flow
-- `/logout` - End current session
-- `/kyc` - Check KYC status and get verification link
+### 🔑 Authentication Commands
+- `/start` - Start bot and get welcome message
+- `/login` - Begin authentication flow
+- `/logout` - End your session
+- `/kyc` - Check KYC verification status
 
-### Wallet Commands
-- `/balance` (or `/b`) - Display current balances
-- `/wallets` (or `/w`) - List all linked wallets
-- `/default_wallet` - View/change default wallet
-- `/deposit` - Show deposit addresses
+### 👛 Wallet Commands
+- `/balance` (or `/b`) - View balances
+- `/wallets` (or `/w`) - List wallets
+- `/default_wallet` - Set default wallet
 
-### Transfer Commands
-- `/send` (or `/s`) - Initiate new transfer
-  - Email transfer option
-  - Wallet transfer option
-- `/withdraw` - Start external withdrawal
-  - Crypto withdrawal
-  - Bank withdrawal (requires KYC)
-- `/history` (or `/h`) - View transaction history
-- `/bulk_transfer` - Start bulk transfer process
-- `/bulk_template` - Download CSV templates
+### 📤 Transfer Commands
+- `/send` (or `/s`) - Start new transfer
+  - Send to email
+  - Send to wallet
+- `/withdraw` - External withdrawal
+- `/history` (or `/h`) - View transfers
+- `/bulk_transfer` - Bulk transfer mode
+- `/bulk_template` - Get CSV templates
 
-### Settings Commands
-- `/settings` (or `/set`) - Access preferences menu
-- `/help` - View available commands
-- `/support` - Get support information
+### ⚙️ Settings Commands
+- `/settings` - Change preferences
+- `/help` - Show commands
+- `/support` - Get help
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
-├── auth/           # Authentication & KYC handlers
-├── commands/       # Command implementations
-├── handlers/       # Menu & interaction handlers
+├── auth/           # Auth & KYC logic
+├── commands/       # Command handlers
+├── handlers/       # Menu handlers
 ├── middleware/     # Auth & rate limiting
-├── transfers/      # Transfer & bulk transfer logic
-├── types/         # TypeScript definitions
+├── transfers/      # Transfer logic
+├── types/         # Type definitions
 ├── utils/         # Shared utilities
-├── wallet/        # Wallet management
+├── wallet/        # Wallet logic
 └── config.ts      # Configuration
 ```
 
-## Development
+## 💻 Development
 
-### Architecture
-- **Command Pattern**: Modular command handlers for each feature
-- **Middleware**: Authentication and rate limiting
+### 🔧 Core Components
+- **Handlers**: Command and menu interaction logic
 - **Services**: API communication layer
-- **Utils**: Shared formatting, validation, and logging
+- **Utils**: Formatting, validation, logging
+- **Middleware**: Auth and rate limiting
 
-### Key Components
-- **Session Store**: Manages user sessions and tokens
-- **Preferences Manager**: Handles user preferences
-- **Menu Builder**: Constructs interactive menus
-- **Transfer State Machine**: Manages transfer flows
+### 🎯 Key Features
+- Session management
+- User preferences
+- Interactive menus
+- Transfer processing
 
-### Error Handling
-- Comprehensive error tracking
-- Rate limit violation handling
-- Session expiration management
-- API error recovery
+### ⚠️ Error Handling
+- Error tracking
+- Rate limit handling
+- Session management
+- Recovery logic
 
-### Logging
-- Multi-level logging (DEBUG, INFO, WARN, ERROR)
-- Automatic log rotation
-- Separate error logs
-- Structured logging with metadata
+### 📋 Logging
+- Multiple log levels
+- Automatic rotation
+- Error logging
+- Metadata support
 
-## Contributing
+## 🤝 Contributing
 1. Fork the repository
 2. Create a feature branch
 3. Commit your changes
 4. Push to your branch
 5. Open a pull request
 
-## License
+## 📄 License
 This project is proprietary software. All rights reserved.
 See LICENSE file for details.
