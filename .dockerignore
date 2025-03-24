@@ -1,0 +1,25 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Development files
+.env
+.env.*
+*.md
+.vscode/
+.idea/
+
+# Build output (will be generated in container)
+dist/
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
