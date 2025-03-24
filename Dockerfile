@@ -21,5 +21,8 @@ USER bun
 # Set environment variables
 ENV NODE_ENV=production
 
+# Expose port for health checks
+EXPOSE 3000
+
 # Start the bot by running TypeScript source directly
 CMD ["bun", "run", "src/index.ts"]

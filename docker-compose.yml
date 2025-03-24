@@ -5,6 +5,8 @@ services:
     build: .
     container_name: copperx-telegram-bot
     restart: unless-stopped
+    ports:
+      - "3000:3000"
     volumes:
       - ./logs:/app/logs
     env_file:
