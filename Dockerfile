@@ -12,8 +12,6 @@ RUN rm -f bun.lock && bun install
 # Copy source code
 COPY . .
 
-# Build TypeScript
-RUN bun run build
 
 # Create logs directory
 RUN mkdir -p logs
