@@ -1,29 +1,24 @@
-# Stage 1: Production
-FROM oven/bun:1
+FROM oven/bun:1.0
 
 WORKDIR /app
 
 # Copy package files
-COPY package*.json bun.lock ./
+COPY package.json bun.lock ./
 
 # Install dependencies
 RUN bun install --frozen-lockfile
 
-# Create logs directory and set permissions
-RUN mkdir -p logs && chown -R bun:bun logs
-
 # Copy source code
 COPY . .
 
-# Switch to non-root user
-USER bun
+# Build TypeScript
+RUN bun run build
+
+# Create logs directory
+RUN mkdir -p logs
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=3000
 
-# Expose port (this should match PORT env var)
-EXPOSE ${PORT}
-
-# Start the bot by running TypeScript source directly
-CMD ["bun", "run", "src/index.ts"]
+# Start the bot
+CMD ["bun", "run", "start"]
