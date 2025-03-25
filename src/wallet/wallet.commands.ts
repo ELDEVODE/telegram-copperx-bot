@@ -18,36 +18,72 @@ export class WalletCommands {
     }
 
     private registerHandlers() {
-        // Wallet commands
+        // Balance commands
         this.bot.command(['balance', 'b'], AuthMiddleware.requireAuth, this.handleBalanceCommand.bind(this));
+        this.bot.action('refresh_balances', AuthMiddleware.requireAuth, this.handleRefreshBalances.bind(this));
+        
+        // Wallet commands
         this.bot.command(['wallets', 'w'], AuthMiddleware.requireAuth, this.handleWalletsCommand.bind(this));
         this.bot.command('default_wallet', AuthMiddleware.requireAuth, this.handleDefaultWalletCommand.bind(this));
-
-        // Wallet action handlers
-        this.bot.action(/^set_default_wallet:(.+)$/, this.handleSetDefaultWallet.bind(this));
-        this.bot.action(/^show_wallet:(.+)$/, this.handleShowWalletDetails.bind(this));
-        this.bot.action('refresh_balances', this.handleRefreshBalances.bind(this));
+        
+        // Wallet actions
+        this.bot.action(/^set_default_wallet:(.+)$/, AuthMiddleware.requireAuth, this.handleSetDefaultWallet.bind(this));
+        this.bot.action(/^show_wallet:(.+)$/, AuthMiddleware.requireAuth, this.handleShowWalletDetails.bind(this));
     }
 
     private async handleBalanceCommand(ctx: BotContext) {
         try {
-            const balances = await this.walletService.getBalances(ctx.session.token!);
-            
+            if (!ctx.session?.token) {
+                return ctx.reply('Please login first using /login');
+            }
+
+            const balances = await this.walletService.getBalances(ctx.session.token);
+            if (!balances || balances.length === 0) {
+                return ctx.reply(
+                    'No balances found. You may need to:\n' +
+                    '1. Complete KYC verification (/kyc)\n' +
+                    '2. Deposit funds to your wallet',
+                    Markup.inlineKeyboard([
+                        [
+                            Markup.button.callback('🏦 View Wallets', 'wallets'),
+                            Markup.button.callback('📥 Deposit', 'show_deposit')
+                        ]
+                    ])
+                );
+            }
+
+            const prefs = this.prefsManager.getPreferences(ctx.from!.id.toString());
             const keyboard = Markup.inlineKeyboard([
                 [
                     Markup.button.callback('🔄 Refresh', 'refresh_balances'),
                     Markup.button.callback('📥 Deposit', 'show_deposit')
                 ],
+                [
+                    Markup.button.callback('💸 Send', 'show_send_options'),
+                    Markup.button.callback('📊 History', 'show_history')
+                ],
                 [Markup.button.callback('🏠 Main Menu', 'show_main')]
             ]);
 
             await ctx.reply(
-                `💰 Your Balances:\n\n${formatBalance(balances)}`,
+                `💰 Your Balances:\n\n${formatBalance(balances, prefs)}`,
                 keyboard
             );
-        } catch (error) {
-            logger.error('Failed to fetch balances', error as Error);
-            await ctx.reply('Failed to fetch balances. Please try again.');
+        } catch (error: any) {
+            logger.error('Balance command failed', error);
+            if (error.message.includes('login')) {
+                return ctx.reply('Your session has expired. Please login again using /login');
+            }
+            if (error.message.includes('KYC')) {
+                return ctx.reply(
+                    '❗ KYC verification required\n\n' +
+                    'To view your balances, you need to complete KYC verification first.',
+                    Markup.inlineKeyboard([
+                        [Markup.button.callback('✅ Complete KYC', 'start_kyc')]
+                    ])
+                );
+            }
+            await ctx.reply('Failed to fetch balances. Please try again later or contact support.');
         }
     }
 

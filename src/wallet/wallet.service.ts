@@ -12,6 +12,9 @@ export class WalletService {
     }
 
     private getHeaders(token: string) {
+        if (!token) {
+            throw new Error('Authentication required. Please login using /login');
+        }
         return { Authorization: `Bearer ${token}` };
     }
 
@@ -33,9 +36,24 @@ export class WalletService {
                 `${this.apiUrl}${ApiEndpoints.wallets.balances}`,
                 { headers: this.getHeaders(token) }
             );
+            
+            if (!response.data || !Array.isArray(response.data)) {
+                throw new Error('Invalid response format from server');
+            }
+
             return response.data;
         } catch (error) {
-            return handleAxiosError(error as AxiosError);
+            if (error instanceof AxiosError) {
+                if (error.response?.status === 401) {
+                    throw new Error('Session expired. Please login again using /login');
+                }
+                if (error.response?.status === 403) {
+                    throw new Error('Access denied. Please complete KYC first using /kyc');
+                }
+                return handleAxiosError(error);
+            }
+            logger.error('Failed to fetch balances', error);
+            throw error;
         }
     }
 

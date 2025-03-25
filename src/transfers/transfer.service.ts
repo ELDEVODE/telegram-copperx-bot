@@ -13,6 +13,9 @@ export class TransferService {
     }
 
     private getHeaders(token: string) {
+        if (!token) {
+            throw new Error('Authentication required. Please login using /login');
+        }
         return { Authorization: `Bearer ${token}` };
     }
 
@@ -29,6 +32,13 @@ export class TransferService {
     }
 
     public validateMinimumAmount(amount: string, currency: string): { isValid: boolean; error?: string } {
+        if (!amount || isNaN(parseFloat(amount))) {
+            return {
+                isValid: false,
+                error: 'Please enter a valid number'
+            };
+        }
+
         const minAmount = this.getMinimumAmount(currency);
         if (parseFloat(amount) < parseFloat(minAmount)) {
             return {
@@ -37,6 +47,52 @@ export class TransferService {
             };
         }
         return { isValid: true };
+    }
+
+    private async validateBalances(token: string, amount: string, currency: string): Promise<{ isValid: boolean; error?: string }> {
+        try {
+            const balances = await this.getWalletBalances(token);
+            const balance = balances.find(b => b.currency === currency);
+            
+            if (!balance) {
+                return {
+                    isValid: false,
+                    error: `No ${currency} balance found. Please deposit first.`
+                };
+            }
+
+            if (parseFloat(balance.amount) < parseFloat(amount)) {
+                return {
+                    isValid: false,
+                    error: `Insufficient ${currency} balance. Available: ${balance.amount} ${currency}`
+                };
+            }
+
+            return { isValid: true };
+        } catch (error) {
+            logger.error('Balance validation failed', error);
+            throw new Error('Failed to validate balance. Please try again.');
+        }
+    }
+
+    private async getWalletBalances(token: string) {
+        try {
+            const response = await axios.get(
+                `${this.apiUrl}${ApiEndpoints.wallets.balances}`,
+                { headers: this.getHeaders(token) }
+            );
+            return response.data;
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                if (error.response?.status === 401) {
+                    throw new Error('Session expired. Please login again using /login');
+                }
+                if (error.response?.status === 403) {
+                    throw new Error('Access denied. Please complete KYC first using /kyc');
+                }
+            }
+            throw error;
+        }
     }
 
     public async calculateFee(token: string, transferData: {
